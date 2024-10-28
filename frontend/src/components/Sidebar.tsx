@@ -1,6 +1,12 @@
 import { Home, Laptop, Smartphone, Watch, Headphones } from "lucide-react"
 import { Button } from "./ui/button"
 
+interface Category {
+  id: string;
+  name: string;
+  icon: React.ElementType;
+}
+
 const categories: Category[] = [
   { id: "all", name: "All", icon: Home },
   { id: "electronics", name: "Electronics", icon: Laptop },
@@ -9,7 +15,12 @@ const categories: Category[] = [
   { id: "audio", name: "Audio", icon: Headphones },
 ]
 
-export function Sidebar({ onCategorySelect }: { onCategorySelect: (category: string) => void }) {
+interface SidebarProps {
+  onCategorySelect: (categoryId: string) => void;
+  selectedCategory: string;
+} 
+
+export function Sidebar({ onCategorySelect, selectedCategory }: SidebarProps) {
   return (
     <div className="w-64 border-r h-screen p-4">
       <h2 className="font-semibold mb-4">Categories</h2>
@@ -19,8 +30,8 @@ export function Sidebar({ onCategorySelect }: { onCategorySelect: (category: str
           return (
             <Button
               key={category.id}
-              variant="ghost"
-              className="w-full justify-start"
+              variant={selectedCategory === category.id ? "secondary" : "ghost"}
+              className="w-full justify-start text-foreground"
               onClick={() => onCategorySelect(category.id)}
             >
               <Icon className="mr-2 h-4 w-4" />

@@ -4,7 +4,7 @@ import { Product, formatPrice } from "@/lib/utils"
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <Card className="w-full">
+    <Card className="card w-full">
       <CardHeader className="p-0">
         <img
           src={product.image}
@@ -18,7 +18,8 @@ export function ProductCard({ product }: { product: Product }) {
         <p className="mt-2 font-bold">{formatPrice(product.price)}</p>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">Add to Cart</Button>
+        <Button data-testid="add-to-cart-button"
+    aria-label="Add to Cart" className="w-full">Add to Cart</Button>
       </CardFooter>
     </Card>
   )

@@ -1,8 +1,11 @@
 import { useState } from 'react'
-import { Search, ShoppingCart, Home, Laptop, Smartphone, Watch, Headphones, Check } from "lucide-react"
+import { Search, ShoppingCart, Home, Laptop, Smartphone, Watch, Headphones, Check, Theater } from "lucide-react"
 import { Button } from "./components/ui/button"
 import { Input } from "./components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader } from "./components/ui/card"
+import { ThemeProvider } from './components/theme-provider'
+import { Navbar } from './components/Navbar'
+import { Sidebar } from './components/Sidebar'
 
 // Types
 type Product = {
@@ -218,96 +221,66 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navbar */}
-      <nav className="border-b">
-        <div className="flex items-center justify-between p-4 max-w-7xl mx-auto">
-          <h1 className="text-2xl font-bold">ShopClone</h1>
-          <div className="flex items-center w-1/3 relative">
-            <Search className="absolute left-2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search products..."
-              className="pl-8"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <Button variant="outline">
-            <ShoppingCart className={`h-4 w-4 mr-2 transition-transform ${isCartAnimating ? 'scale-125' : ''}`} />
-            Cart ({cartItems.length})
-          </Button>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <div className="min-h-screen bg-background">
+        <Navbar
+          onSearch={setSearchTerm} 
+          isCartAnimating={isCartAnimating} 
+          cartItems={cartItems} 
+        />
+
+        <div className="flex">
+          <Sidebar onCategorySelect={setSelectedCategory} selectedCategory={selectedCategory} />
+
+          {/* Main Content */}
+          <main className="flex-1 p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((product) => (
+                <Card key={product.id}>
+                  <CardHeader className="p-0">
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="h-48 w-full object-cover rounded-t-lg"
+                    />
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold text-lg">{product.title}</h3>
+                    <p className="text-sm text-muted-foreground">{product.description}</p>
+                    <p className="mt-2 font-bold text-lg">{formatPrice(product.price)}</p>
+                  </CardContent>
+                  <CardFooter>
+                    {cartItems.includes(product.id) ? (
+                      <Button 
+                        variant="secondary"
+                        className="w-full"
+                        onClick={() => removeFromCart(product.id)}
+                      >
+                        Remove from Cart
+                      </Button>
+                    ) : (
+                      <Button 
+                        className="w-full"
+                        onClick={() => addToCart(product.id)}
+                      >
+                        {cartItems.includes(product.id) ? (
+                          <>
+                            <Check className="mr-2 h-4 w-4" />
+                            Added
+                          </>
+                        ) : (
+                          'Add to Cart'
+                        )}
+                      </Button>
+                    )}
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </main>
         </div>
-      </nav>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className="w-64 border-r h-[calc(100vh-4rem)] p-4">
-          <h2 className="font-semibold mb-4">Categories</h2>
-          <div className="space-y-2">
-            {categories.map((category) => {
-              const Icon = category.icon
-              return (
-                <Button
-                  key={category.id}
-                  variant={selectedCategory === category.id ? "secondary" : "ghost"}
-                  className="w-full justify-start"
-                  onClick={() => setSelectedCategory(category.id)}
-                >
-                  <Icon className="mr-2 h-4 w-4" />
-                  {category.name}
-                </Button>
-              )
-            })}
-          </div>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <Card key={product.id}>
-                <CardHeader className="p-0">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="h-48 w-full object-cover rounded-t-lg"
-                  />
-                </CardHeader>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-lg">{product.title}</h3>
-                  <p className="text-sm text-muted-foreground">{product.description}</p>
-                  <p className="mt-2 font-bold text-lg">{formatPrice(product.price)}</p>
-                </CardContent>
-                <CardFooter>
-                  {cartItems.includes(product.id) ? (
-                    <Button 
-                      variant="secondary"
-                      className="w-full"
-                      onClick={() => removeFromCart(product.id)}
-                    >
-                      Remove from Cart
-                    </Button>
-                  ) : (
-                    <Button 
-                      className="w-full"
-                      onClick={() => addToCart(product.id)}
-                    >
-                      {cartItems.includes(product.id) ? (
-                        <>
-                          <Check className="mr-2 h-4 w-4" />
-                          Added
-                        </>
-                      ) : (
-                        'Add to Cart'
-                      )}
-                    </Button>
-                  )}
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </main>
       </div>
-    </div>
+    </ThemeProvider>
   )
 }
 
