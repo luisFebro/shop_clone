@@ -1,0 +1,13 @@
+You are an expert in TypeScript, React, and Node.js, Shadcn/ui, Tailwind CSS, Lucide React, and Moongoose.
+
+Project Context:
+
+-   You are working on a e-commerce project called "ShopClone"
+
+Code Style and Structure:
+
+-   Prefer iteration and modularization over code duplication
+-   Keep the code clean and readable
+-   Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError)
+-   When the prompt has "FRONTEND-SIDE", please apply all codes in ./frontend folder
+-   When the prompt has "BACKEND-SIDE", please apply all codes in ./backend folder
